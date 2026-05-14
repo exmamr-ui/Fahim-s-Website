@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <title>Fahim's Website</title>
+</head>
+<body>
+    <h2>Message Fahim</h2>
+    <input type="text" id="userName" placeholder="আপনার নাম" style="display:block; margin-bottom:10px; padding:8px;">
+    <textarea id="userMsg" placeholder="মেসেজ লিখুন" style="display:block; margin-bottom:10px; padding:8px;"></textarea>
+    <button id="sendBtn" onclick="sendMessage()" style="padding: 10px 20px; cursor: pointer;">Send Message</button>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-app.js";
+      import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-firestore.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyAfVXqlCXIZE95z2dj0XmNDe5U", 
+        authDomain: "fahim-s-website.firebaseapp.com",
+        projectId: "fahim-s-website",
+        storageBucket: "fahim-s-website.appspot.com",
+        messagingSenderId: "549002044201",
+        appId: "1:549002044201:web:fafcfd8e56067",
+        measurementId: "G-NX6J1ELPVJ"
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+
+      window.sendMessage = async function() {
+        const name = document.getElementById('userName').value;
+        const msg = document.getElementById('userMsg').value;
+        const btn = document.getElementById('sendBtn');
+
+        if(!name || !msg) {
+            alert("দয়া করে নাম এবং মেসেজ দুটোই লিখুন!");
+            return;
+        }
+
+        btn.disabled = true;
+        btn.innerText = "Sending...";
+
+        try {
+          await addDoc(collection(db, "messages"), {
+            "Sender message": name,
+            "User message": msg,
+            "timestamp": new Date()
+          });
+
+          const myNumber = "8801303359567";
+          const whatsappURL = `https://wa.me/${myNumber}?text=Hi Fahim, I am ${name}. %0A%0AMessage: ${msg}`;
+          window.open(whatsappURL, '_blank');
+          alert("মেসেজ সেভ হয়েছে এবং হোয়াটসঅ্যাপ ওপেন হচ্ছে!");
+        } catch (e) {
+          alert("Error: " + e.message);
+        } finally {
+          btn.disabled = false;
+          btn.innerText = "Send Message";
+        }
+      }
+    </script>
+</body>
+</html>
