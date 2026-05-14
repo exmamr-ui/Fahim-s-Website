@@ -1,63 +1,798 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-    <meta charset="UTF-8">
-    <title>Fahim's Website</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fahim's Website</title>
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0f0f13;
+      --surface: #1a1a24;
+      --surface2: #22222f;
+      --border: #2e2e40;
+      --accent: #6c63ff;
+      --accent2: #ff6584;
+      --text: #e8e8f0;
+      --muted: #7a7a99;
+      --sent: #6c63ff;
+      --received: #2e2e40;
+      --white: #ffffff;
+    }
+
+    body {
+      font-family: 'Poppins', 'Hind Siliguri', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 28px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .header-info h1 {
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--white);
+    }
+
+    .status {
+      font-size: 12px;
+      color: #4ade80;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .status::before {
+      content: '';
+      width: 7px; height: 7px;
+      background: #4ade80;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    /* ── MAIN LAYOUT ── */
+    main {
+      flex: 1;
+      display: flex;
+      min-height: calc(100vh - 77px);
+    }
+
+    /* ── LEFT PANEL ── */
+    .left-panel {
+      width: 280px;
+      flex-shrink: 0;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      padding: 28px 20px;
+      gap: 12px;
+    }
+
+    .panel-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--muted);
+      margin-bottom: 4px;
+      font-weight: 600;
+    }
+
+    .contact-option {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      border-radius: 12px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      text-decoration: none;
+      color: var(--text);
+      transition: all .2s;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    .contact-option:hover {
+      background: var(--border);
+      border-color: var(--accent);
+      transform: translateX(4px);
+    }
+
+    .contact-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .icon-wa  { background: rgba(37,211,102,.15); }
+    .icon-msg { background: rgba(108,99,255,.15); }
+
+    .contact-desc {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 2px;
+      font-weight: 400;
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 8px 0;
+    }
+
+    .info-box {
+      padding: 14px 16px;
+      border-radius: 12px;
+      background: rgba(108,99,255,.08);
+      border: 1px solid rgba(108,99,255,.2);
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ── RIGHT PANEL ── */
+    .right-panel {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg);
+    }
+
+    /* user name bar */
+    .name-bar {
+      padding: 16px 24px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .name-bar input {
+      flex: 1;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 14px;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 14px;
+      outline: none;
+      transition: border-color .2s;
+    }
+    .name-bar input:focus { border-color: var(--accent); }
+    .name-bar input::placeholder { color: var(--muted); }
+
+    .name-label {
+      font-size: 13px;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    /* chat messages */
+    .chat-area {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      scroll-behavior: smooth;
+    }
+
+    .chat-area::-webkit-scrollbar { width: 5px; }
+    .chat-area::-webkit-scrollbar-track { background: transparent; }
+    .chat-area::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+
+    .msg-row {
+      display: flex;
+      flex-direction: column;
+      max-width: 70%;
+      animation: fadeUp .25s ease;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .msg-row.sent   { align-self: flex-end; align-items: flex-end; }
+    .msg-row.received { align-self: flex-start; align-items: flex-start; }
+
+    .msg-bubble {
+      padding: 11px 16px;
+      border-radius: 18px;
+      font-size: 14px;
+      line-height: 1.55;
+      word-break: break-word;
+    }
+    .sent .msg-bubble {
+      background: var(--accent);
+      color: #fff;
+      border-bottom-right-radius: 4px;
+    }
+    .received .msg-bubble {
+      background: var(--surface2);
+      color: var(--text);
+      border-bottom-left-radius: 4px;
+      border: 1px solid var(--border);
+    }
+
+    .msg-meta {
+      font-size: 10px;
+      color: var(--muted);
+      margin-top: 4px;
+      padding: 0 4px;
+    }
+
+    .sender-name {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 3px;
+      padding: 0 4px;
+    }
+
+    .empty-state {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      gap: 12px;
+      font-size: 14px;
+    }
+    .empty-icon { font-size: 48px; opacity: .4; }
+
+    /* input bar */
+    .input-bar {
+      padding: 16px 20px;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: flex-end;
+      gap: 10px;
+    }
+
+    .input-bar textarea {
+      flex: 1;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px 16px;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 14px;
+      outline: none;
+      resize: none;
+      max-height: 120px;
+      min-height: 48px;
+      transition: border-color .2s;
+      line-height: 1.5;
+    }
+    .input-bar textarea:focus { border-color: var(--accent); }
+    .input-bar textarea::placeholder { color: var(--muted); }
+
+    .send-btn {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--accent), #9c8fff);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: transform .15s, opacity .15s;
+    }
+    .send-btn:hover { transform: scale(1.07); }
+    .send-btn:active { transform: scale(.95); }
+    .send-btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+    .send-btn svg { width: 20px; height: 20px; fill: #fff; }
+
+    /* toast */
+    #toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 10px 20px;
+      border-radius: 12px;
+      font-size: 13px;
+      opacity: 0;
+      pointer-events: none;
+      transition: all .3s;
+      z-index: 999;
+    }
+    #toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* loading dots */
+    .typing {
+      display: flex;
+      gap: 4px;
+      padding: 12px 16px;
+      background: var(--surface2);
+      border-radius: 18px;
+      border-bottom-left-radius: 4px;
+      border: 1px solid var(--border);
+      width: fit-content;
+    }
+    .typing span {
+      width: 7px; height: 7px;
+      background: var(--muted);
+      border-radius: 50%;
+      animation: bounce .8s infinite;
+    }
+    .typing span:nth-child(2) { animation-delay: .15s; }
+    .typing span:nth-child(3) { animation-delay: .3s; }
+    @keyframes bounce {
+      0%,60%,100% { transform: translateY(0); }
+      30% { transform: translateY(-6px); }
+    }
+
+    /* responsive */
+    @media (max-width: 640px) {
+      .left-panel { width: 220px; }
+    }
+    @media (max-width: 480px) {
+      main { flex-direction: column; }
+      .left-panel { width: 100%; border-right: none; border-bottom: 1px solid var(--border); flex-direction: row; flex-wrap: wrap; padding: 14px; }
+    }
+  </style>
 </head>
 <body>
-    <h2>Message Fahim</h2>
-    <input type="text" id="userName" placeholder="আপনার নাম" style="display:block; margin-bottom:10px; padding:8px;">
-    <textarea id="userMsg" placeholder="মেসেজ লিখুন" style="display:block; margin-bottom:10px; padding:8px;"></textarea>
-    <button id="sendBtn" onclick="sendMessage()" style="padding: 10px 20px; cursor: pointer;">Send Message</button>
 
-    <script type="module">
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-app.js";
-      import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-firestore.js";
+<!-- HEADER -->
+<header>
+  <div class="avatar">F</div>
+  <div class="header-info">
+    <h1>Fahim</h1>
+    <div class="status">Online</div>
+  </div>
+</header>
 
-      const firebaseConfig = {
-        apiKey: "AIzaSyAfVXqlCXIZE95z2dj0XmNDe5U", 
-        authDomain: "fahim-s-website.firebaseapp.com",
-        projectId: "fahim-s-website",
-        storageBucket: "fahim-s-website.appspot.com",
-        messagingSenderId: "549002044201",
-        appId: "1:549002044201:web:fafcfd8e56067",
-        measurementId: "G-NX6J1ELPVJ"
-      };
+<main>
 
-      const app = initializeApp(firebaseConfig);
-      const db = getFirestore(app);
+  <!-- LEFT PANEL -->
+  <aside class="left-panel">
+    <div class="panel-title">যোগাযোগ করুন</div>
 
-      window.sendMessage = async function() {
-        const name = document.getElementById('userName').value;
-        const msg = document.getElementById('userMsg').value;
-        const btn = document.getElementById('sendBtn');
+    <!-- Original WhatsApp option -->
+    <a class="contact-option" id="waOption" href="#" onclick="openWhatsApp(); return false;">
+      <div class="contact-icon icon-wa">💬</div>
+      <div>
+        <div>WhatsApp</div>
+        <div class="contact-desc">সরাসরি WhatsApp-এ</div>
+      </div>
+    </a>
 
-        if(!name || !msg) {
-            alert("দয়া করে নাম এবং মেসেজ দুটোই লিখুন!");
-            return;
+    <div class="divider"></div>
+
+    <!-- New direct message option -->
+    <div class="contact-option" onclick="focusChat()" style="cursor:pointer;">
+      <div class="contact-icon icon-msg">✉️</div>
+      <div>
+        <div>সরাসরি মেসেজ</div>
+        <div class="contact-desc">এখানেই চ্যাট করুন</div>
+      </div>
+    </div>
+
+    <div class="info-box">
+      📌 মেসেজ পাঠালে Fahim রিপ্লাই দেবেন এবং আপনি সরাসরি এই পেজেই দেখতে পাবেন।
+    </div>
+  </aside>
+
+  <!-- RIGHT PANEL -->
+  <section class="right-panel">
+
+    <!-- Name Bar -->
+    <div class="name-bar">
+      <span class="name-label">আপনার নাম:</span>
+      <input type="text" id="userName" placeholder="নাম লিখুন..." maxlength="50" />
+    </div>
+
+    <!-- Chat Area -->
+    <div class="chat-area" id="chatArea">
+      <div class="empty-state" id="emptyState">
+        <div class="empty-icon">💭</div>
+        <div>এখনো কোনো মেসেজ নেই</div>
+        <div style="font-size:12px">নিচে মেসেজ লিখে পাঠান</div>
+      </div>
+    </div>
+
+    <!-- Input Bar -->
+    <div class="input-bar">
+      <textarea id="userMsg" placeholder="মেসেজ লিখুন..." rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+      <button class="send-btn" id="sendBtn" onclick="sendMessage()" title="Send">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+        </svg>
+      </button>
+    </div>
+
+  </section>
+</main>
+
+<div id="toast"></div>
+
+<!-- FIREBASE -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-app.js";
+  import {
+    getFirestore,
+    collection,
+    addDoc,
+    query,
+    orderBy,
+    onSnapshot,
+    serverTimestamp,
+    doc,
+    getDoc
+  } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-firestore.js";
+
+  // ─── YOUR FIREBASE CONFIG ───
+  const firebaseConfig = {
+    apiKey: "AIzaSyAfVXqlCXIZE95z2dj0XmNDe5U",
+    authDomain: "fahim-s-website.firebaseapp.com",
+    projectId: "fahim-s-website",
+    storageBucket: "fahim-s-website.appspot.com",
+    messagingSenderId: "549002044201",
+    appId: "1:549002044201:web:fafcfd8e56067",
+    measurementId: "G-NX6J1ELPVJ"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db  = getFirestore(app);
+
+  // ── Generate or load session ID for this visitor ──
+  let sessionId = localStorage.getItem('fahim_session');
+  if (!sessionId) {
+    sessionId = 'user_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7);
+    localStorage.setItem('fahim_session', sessionId);
+  }
+
+  // ── Load saved name ──
+  const savedName = localStorage.getItem('fahim_username');
+  if (savedName) document.getElementById('userName').value = savedName;
+
+  // ── Real-time listener for THIS session's messages ──
+  const msgsRef  = collection(db, 'chats', sessionId, 'messages');
+  const msgsQuery = query(msgsRef, orderBy('timestamp', 'asc'));
+
+  let firstLoad = true;
+
+  onSnapshot(msgsQuery, (snapshot) => {
+    const chatArea  = document.getElementById('chatArea');
+    const emptyState = document.getElementById('emptyState');
+
+    if (snapshot.empty) {
+      emptyState.style.display = 'flex';
+      return;
+    }
+
+    emptyState.style.display = 'none';
+
+    // Remove typing indicator if exists
+    const typingEl = document.getElementById('typingIndicator');
+    if (typingEl) typingEl.remove();
+
+    // Rebuild messages
+    // Only add new messages (avoid full re-render)
+    const rendered = new Set([...chatArea.querySelectorAll('.msg-row')].map(el => el.dataset.id));
+
+    snapshot.docChanges().forEach(change => {
+      if (change.type === 'added') {
+        const data = change.doc.data();
+        const id   = change.doc.id;
+        if (rendered.has(id)) return;
+
+        const isFahim = data.sender === 'fahim';
+        const row = document.createElement('div');
+        row.className = `msg-row ${isFahim ? 'received' : 'sent'}`;
+        row.dataset.id = id;
+
+        if (isFahim) {
+          const nameEl = document.createElement('div');
+          nameEl.className = 'sender-name';
+          nameEl.textContent = 'Fahim';
+          row.appendChild(nameEl);
         }
 
-        btn.disabled = true;
-        btn.innerText = "Sending...";
+        const bubble = document.createElement('div');
+        bubble.className = 'msg-bubble';
+        bubble.textContent = data.text;
+        row.appendChild(bubble);
 
-        try {
-          await addDoc(collection(db, "messages"), {
-            "Sender message": name,
-            "User message": msg,
-            "timestamp": new Date()
+        const meta = document.createElement('div');
+        meta.className = 'msg-meta';
+        const ts = data.timestamp?.toDate ? data.timestamp.toDate() : new Date();
+        meta.textContent = ts.toLocaleTimeString('bn-BD', { hour: '2-digit', minute: '2-digit' });
+        row.appendChild(meta);
+
+        chatArea.appendChild(row);
+      }
+    });
+
+    // Scroll to bottom
+    chatArea.scrollTop = chatArea.scrollHeight;
+    firstLoad = false;
+  });
+
+  // ── Send Message ──
+  window.sendMessage = async function () {
+    const nameInput = document.getElementById('userName');
+    const msgInput  = document.getElementById('userMsg');
+    const sendBtn   = document.getElementById('sendBtn');
+
+    const name = nameInput.value.trim();
+    const text = msgInput.value.trim();
+
+    if (!name) { toast('নাম লিখুন আগে!'); nameInput.focus(); return; }
+    if (!text) { toast('মেসেজ লিখুন!'); msgInput.focus(); return; }
+
+    localStorage.setItem('fahim_username', name);
+
+    sendBtn.disabled = true;
+    msgInput.value   = '';
+    msgInput.style.height = '';
+
+    try {
+      // Save to session sub-collection
+      await addDoc(collection(db, 'chats', sessionId, 'messages'), {
+        sender:    'user',
+        senderName: name,
+        text,
+        timestamp: serverTimestamp()
+      });
+
+      // Also save to top-level 'messages' for Fahim's dashboard
+      await addDoc(collection(db, 'messages'), {
+        sessionId,
+        senderName: name,
+        text,
+        timestamp: serverTimestamp(),
+        replied: false
+      });
+
+    } catch (e) {
+      toast('Error: ' + e.message);
+    } finally {
+      sendBtn.disabled = false;
+      msgInput.focus();
+    }
+  };
+
+  // ── WhatsApp fallback ──
+  window.openWhatsApp = function () {
+    const name = document.getElementById('userName').value.trim() || 'একজন ভিজিটর';
+    const msg  = document.getElementById('userMsg').value.trim()  || 'হ্যালো Fahim!';
+    const num  = '8801303359567';
+    window.open(`https://wa.me/${num}?text=Hi Fahim, আমি ${name}.%0A%0AMessage: ${msg}`, '_blank');
+  };
+
+  window.focusChat = function () {
+    document.getElementById('userMsg').focus();
+  };
+
+  window.handleKey = function (e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      window.sendMessage();
+    }
+  };
+
+  window.autoResize = function (el) {
+    el.style.height = '';
+    el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+  };
+
+  window.toast = function (msg) {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 3000);
+  };
+</script>
+
+<!-- ══════════════════════════════════════════════
+     FAHIM'S ADMIN PANEL  (লুকানো — শুধু Fahim দেখবেন)
+     URL-এ ?admin=fahim123 যোগ করলে খুলবে
+     ══════════════════════════════════════════════ -->
+<script type="module">
+  if (new URLSearchParams(location.search).get('admin') === 'fahim123') {
+    // Import firebase again (module scope)
+    import("https://www.gstatic.com/firebasejs/10.12.1/firebase-app.js").then(({ initializeApp }) => {
+      import("https://www.gstatic.com/firebasejs/10.12.1/firebase-firestore.js").then(({
+        getFirestore, collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, where, getDocs
+      }) => {
+        const firebaseConfig = {
+          apiKey: "AIzaSyAfVXqlCXIZE95z2dj0XmNDe5U",
+          authDomain: "fahim-s-website.firebaseapp.com",
+          projectId: "fahim-s-website",
+          storageBucket: "fahim-s-website.appspot.com",
+          messagingSenderId: "549002044201",
+          appId: "1:549002044201:web:fafcfd8e56067"
+        };
+
+        const app2 = initializeApp(firebaseConfig, 'admin');
+        const db2  = getFirestore(app2);
+
+        // Build admin UI
+        const panel = document.createElement('div');
+        panel.innerHTML = `
+          <style>
+            #adminPanel {
+              position: fixed; top: 0; right: 0; width: 380px; height: 100vh;
+              background: #12121a; border-left: 2px solid #6c63ff;
+              z-index: 9999; display: flex; flex-direction: column;
+              font-family: 'Poppins', sans-serif; font-size: 13px; color: #e8e8f0;
+            }
+            #adminHeader {
+              padding: 14px 16px; background: #1a1a24; border-bottom: 1px solid #2e2e40;
+              font-weight: 600; font-size: 14px; display: flex; justify-content: space-between;
+            }
+            #adminBadge { background: #6c63ff; color:#fff; padding: 2px 10px; border-radius: 20px; font-size:11px; }
+            #sessionList { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 8px; }
+            .session-card {
+              background: #1a1a24; border: 1px solid #2e2e40; border-radius: 10px;
+              padding: 12px; cursor: pointer; transition: border-color .2s;
+            }
+            .session-card:hover, .session-card.active { border-color: #6c63ff; }
+            .session-card .sc-name { font-weight: 600; color: #fff; }
+            .session-card .sc-preview { color: #7a7a99; font-size: 11px; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+            #replyPanel {
+              border-top: 2px solid #6c63ff; background: #1a1a24;
+              display: none; flex-direction: column; max-height: 55vh;
+            }
+            #replyHeader { padding: 10px 14px; font-size: 12px; color: #7a7a99; border-bottom: 1px solid #2e2e40; }
+            #adminChat { flex:1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 8px; }
+            .am { background: #2e2e40; border-radius: 12px; padding: 8px 12px; font-size: 13px; }
+            .am.fahim { background: #6c63ff; color: #fff; align-self: flex-end; }
+            .am-meta { font-size: 10px; color: #7a7a99; margin-top: 3px; }
+            #replyRow { display: flex; gap: 8px; padding: 10px; }
+            #adminInput {
+              flex:1; background: #22222f; border: 1px solid #2e2e40; border-radius: 10px;
+              padding: 9px 12px; color: #e8e8f0; font-family: inherit; font-size: 13px; outline: none; resize: none;
+            }
+            #adminInput:focus { border-color: #6c63ff; }
+            #replyBtn {
+              background: #6c63ff; border: none; color: #fff; border-radius: 10px;
+              padding: 0 16px; cursor: pointer; font-size: 13px; font-weight: 600;
+            }
+          </style>
+          <div id="adminPanel">
+            <div id="adminHeader">
+              <span>🔐 Admin Panel</span>
+              <span id="adminBadge">Fahim Only</span>
+            </div>
+            <div id="sessionList"><div style="color:#7a7a99;padding:16px">লোড হচ্ছে...</div></div>
+            <div id="replyPanel">
+              <div id="replyHeader">সিলেক্ট করা কথোপকথন</div>
+              <div id="adminChat"></div>
+              <div id="replyRow">
+                <textarea id="adminInput" rows="2" placeholder="Reply লিখুন... (Enter = send)"></textarea>
+                <button id="replyBtn" onclick="adminReply()">পাঠান</button>
+              </div>
+            </div>
+          </div>
+        `;
+        document.body.appendChild(panel);
+
+        let currentSession = null;
+        let unsubChat = null;
+
+        // Load all sessions (from top-level messages, grouped by sessionId)
+        const sessions = {};
+        const allMsgsQ = query(collection(db2, 'messages'), orderBy('timestamp', 'desc'));
+        onSnapshot(allMsgsQ, (snap) => {
+          snap.docs.forEach(d => {
+            const data = d.data();
+            if (!sessions[data.sessionId]) {
+              sessions[data.sessionId] = { name: data.senderName, last: data.text, id: data.sessionId };
+            }
           });
 
-          const myNumber = "8801303359567";
-          const whatsappURL = `https://wa.me/${myNumber}?text=Hi Fahim, I am ${name}. %0A%0AMessage: ${msg}`;
-          window.open(whatsappURL, '_blank');
-          alert("মেসেজ সেভ হয়েছে এবং হোয়াটসঅ্যাপ ওপেন হচ্ছে!");
-        } catch (e) {
-          alert("Error: " + e.message);
-        } finally {
-          btn.disabled = false;
-          btn.innerText = "Send Message";
+          const list = document.getElementById('sessionList');
+          list.innerHTML = '';
+          if (!Object.keys(sessions).length) {
+            list.innerHTML = '<div style="color:#7a7a99;padding:16px">এখনো কোনো মেসেজ নেই</div>';
+            return;
+          }
+          Object.values(sessions).forEach(s => {
+            const card = document.createElement('div');
+            card.className = 'session-card' + (s.id === currentSession ? ' active' : '');
+            card.innerHTML = `<div class="sc-name">${s.name}</div><div class="sc-preview">${s.last}</div>`;
+            card.onclick = () => openSession(s.id, s.name);
+            list.appendChild(card);
+          });
+        });
+
+        function openSession(sid, name) {
+          currentSession = sid;
+          document.getElementById('replyPanel').style.display = 'flex';
+          document.getElementById('replyPanel').style.flexDirection = 'column';
+          document.getElementById('replyHeader').textContent = `💬 ${name}`;
+
+          if (unsubChat) unsubChat();
+
+          const chatQ = query(collection(db2, 'chats', sid, 'messages'), orderBy('timestamp', 'asc'));
+          unsubChat = onSnapshot(chatQ, (snap) => {
+            const ac = document.getElementById('adminChat');
+            ac.innerHTML = '';
+            snap.docs.forEach(d => {
+              const data = d.data();
+              const div = document.createElement('div');
+              div.className = 'am' + (data.sender === 'fahim' ? ' fahim' : '');
+              div.textContent = data.text;
+              const ts = data.timestamp?.toDate ? data.timestamp.toDate() : new Date();
+              div.innerHTML += `<div class="am-meta">${data.sender === 'fahim' ? 'আপনি' : data.senderName} · ${ts.toLocaleTimeString('bn-BD', {hour:'2-digit',minute:'2-digit'})}</div>`;
+              ac.appendChild(div);
+            });
+            ac.scrollTop = ac.scrollHeight;
+          });
         }
-      }
-    </script>
+
+        window.adminReply = async function () {
+          if (!currentSession) return;
+          const inp = document.getElementById('adminInput');
+          const text = inp.value.trim();
+          if (!text) return;
+          inp.value = '';
+          await addDoc(collection(db2, 'chats', currentSession, 'messages'), {
+            sender: 'fahim',
+            senderName: 'Fahim',
+            text,
+            timestamp: serverTimestamp()
+          });
+        };
+
+        document.getElementById('adminInput').addEventListener('keydown', e => {
+          if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); window.adminReply(); }
+        });
+      });
+    });
+  }
+</script>
+
 </body>
 </html>
