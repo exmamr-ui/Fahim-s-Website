@@ -7,376 +7,172 @@
   <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --bg: #0f0f13;
-      --surface: #1a1a24;
-      --surface2: #22222f;
-      --border: #2e2e40;
-      --accent: #6c63ff;
-      --accent2: #ff6584;
-      --text: #e8e8f0;
-      --muted: #7a7a99;
-      --sent: #6c63ff;
-      --received: #2e2e40;
-      --white: #ffffff;
+      --bg: #0f0f13; --surface: #1a1a24; --surface2: #22222f;
+      --border: #2e2e40; --accent: #6c63ff; --accent2: #ff6584;
+      --text: #e8e8f0; --muted: #7a7a99; --white: #ffffff;
     }
-
-    body {
-      font-family: 'Poppins', 'Hind Siliguri', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
+    body { font-family: 'Poppins','Hind Siliguri',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; display:flex; flex-direction:column; }
 
     /* ── HEADER ── */
-    header {
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      padding: 16px 28px;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
+    header { background:var(--surface); border-bottom:1px solid var(--border); padding:16px 28px; display:flex; align-items:center; gap:14px; position:sticky; top:0; z-index:200; }
+    .avatar { width:44px; height:44px; border-radius:50%; background:linear-gradient(135deg,var(--accent),var(--accent2)); display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:700; color:#fff; flex-shrink:0; }
+    .header-info h1 { font-size:17px; font-weight:600; color:var(--white); }
+    .status { font-size:12px; color:#4ade80; display:flex; align-items:center; gap:5px; }
+    .status::before { content:''; width:7px; height:7px; background:#4ade80; border-radius:50%; display:inline-block; }
+    .header-spacer { flex:1; }
 
-    .avatar {
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      font-weight: 700;
-      color: #fff;
-      flex-shrink: 0;
+    /* THREE DOT MENU */
+    .three-dot-wrap { position:relative; }
+    .three-dot-btn {
+      width:38px; height:38px; border-radius:10px; background:transparent;
+      border:1px solid var(--border); cursor:pointer;
+      display:flex; align-items:center; justify-content:center;
+      color:var(--muted); font-size:20px; transition:all .2s; line-height:1;
+      user-select:none;
     }
+    .three-dot-btn:hover { background:var(--surface2); color:var(--text); }
 
-    .header-info h1 {
-      font-size: 17px;
-      font-weight: 600;
-      color: var(--white);
+    .dot-menu {
+      position:absolute; top:46px; right:0;
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:12px; overflow:hidden; min-width:180px;
+      box-shadow:0 8px 32px rgba(0,0,0,.4);
+      opacity:0; pointer-events:none; transform:translateY(-8px);
+      transition:all .2s;
+      z-index:300;
     }
+    .dot-menu.open { opacity:1; pointer-events:all; transform:translateY(0); }
+    .dot-menu-item {
+      display:flex; align-items:center; gap:10px;
+      padding:12px 16px; cursor:pointer; font-size:14px;
+      color:var(--text); transition:background .15s;
+      border-bottom:1px solid var(--border);
+    }
+    .dot-menu-item:last-child { border-bottom:none; }
+    .dot-menu-item:hover { background:var(--surface2); }
+    .dot-menu-item .mi-icon { font-size:16px; }
 
-    .status {
-      font-size: 12px;
-      color: #4ade80;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-    .status::before {
-      content: '';
-      width: 7px; height: 7px;
-      background: #4ade80;
-      border-radius: 50%;
-      display: inline-block;
-    }
-
-    /* ── MAIN LAYOUT ── */
-    main {
-      flex: 1;
-      display: flex;
-      min-height: calc(100vh - 77px);
-    }
+    /* ── PAGES ── */
+    .page { display:none; flex:1; flex-direction:column; }
+    .page.active { display:flex; }
 
     /* ── LEFT PANEL ── */
-    .left-panel {
-      width: 280px;
-      flex-shrink: 0;
-      background: var(--surface);
-      border-right: 1px solid var(--border);
-      display: flex;
-      flex-direction: column;
-      padding: 28px 20px;
-      gap: 12px;
+    main { flex:1; display:flex; min-height:calc(100vh - 77px); }
+    .left-panel { width:280px; flex-shrink:0; background:var(--surface); border-right:1px solid var(--border); display:flex; flex-direction:column; padding:28px 20px; gap:12px; }
+    .panel-title { font-size:11px; text-transform:uppercase; letter-spacing:1.5px; color:var(--muted); margin-bottom:4px; font-weight:600; }
+    .contact-option { display:flex; align-items:center; gap:12px; padding:14px 16px; border-radius:12px; background:var(--surface2); border:1px solid var(--border); cursor:pointer; text-decoration:none; color:var(--text); transition:all .2s; font-size:14px; font-weight:500; }
+    .contact-option:hover { background:var(--border); border-color:var(--accent); transform:translateX(4px); }
+    .contact-icon { width:38px; height:38px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
+    .icon-wa  { background:rgba(37,211,102,.15); }
+    .icon-msg { background:rgba(108,99,255,.15); }
+    .contact-desc { font-size:11px; color:var(--muted); margin-top:2px; font-weight:400; }
+    .divider { height:1px; background:var(--border); margin:8px 0; }
+    .info-box { padding:14px 16px; border-radius:12px; background:rgba(108,99,255,.08); border:1px solid rgba(108,99,255,.2); font-size:12px; color:var(--muted); line-height:1.6; }
+    #notifBanner { padding:12px 14px; border-radius:12px; background:rgba(251,191,36,.08); border:1px solid rgba(251,191,36,.3); font-size:12px; color:#fbbf24; line-height:1.6; display:none; }
+    #notifBanner button { margin-top:8px; width:100%; background:rgba(251,191,36,.15); border:1px solid rgba(251,191,36,.4); color:#fbbf24; border-radius:8px; padding:7px 12px; cursor:pointer; font-size:12px; font-family:inherit; font-weight:600; }
+
+    /* ── RIGHT PANEL / CHAT ── */
+    .right-panel { flex:1; display:flex; flex-direction:column; background:var(--bg); }
+    .name-bar { padding:16px 24px; background:var(--surface); border-bottom:1px solid var(--border); display:flex; align-items:center; gap:12px; }
+    .name-bar input { flex:1; background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:10px 14px; color:var(--text); font-family:inherit; font-size:14px; outline:none; transition:border-color .2s; }
+    .name-bar input:focus { border-color:var(--accent); }
+    .name-bar input::placeholder { color:var(--muted); }
+    .name-label { font-size:13px; color:var(--muted); white-space:nowrap; }
+    .chat-area { flex:1; overflow-y:auto; padding:24px; display:flex; flex-direction:column; gap:14px; scroll-behavior:smooth; }
+    .chat-area::-webkit-scrollbar { width:5px; }
+    .chat-area::-webkit-scrollbar-thumb { background:var(--border); border-radius:10px; }
+    .msg-row { display:flex; flex-direction:column; max-width:72%; animation:fadeUp .25s ease; }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+    .msg-row.sent     { align-self:flex-end; align-items:flex-end; }
+    .msg-row.received { align-self:flex-start; align-items:flex-start; }
+    .msg-bubble { padding:11px 16px; border-radius:18px; font-size:14px; line-height:1.55; word-break:break-word; }
+    .sent .msg-bubble     { background:var(--accent); color:#fff; border-bottom-right-radius:4px; }
+    .received .msg-bubble { background:var(--surface2); color:var(--text); border-bottom-left-radius:4px; border:1px solid var(--border); }
+    .msg-meta    { font-size:10px; color:var(--muted); margin-top:4px; padding:0 4px; }
+    .sender-name { font-size:11px; font-weight:600; color:var(--accent); margin-bottom:3px; padding:0 4px; }
+    .empty-state { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; color:var(--muted); gap:12px; font-size:14px; }
+    .empty-icon  { font-size:48px; opacity:.4; }
+    .input-bar { padding:16px 20px; background:var(--surface); border-top:1px solid var(--border); display:flex; align-items:flex-end; gap:10px; }
+    .input-bar textarea { flex:1; background:var(--surface2); border:1px solid var(--border); border-radius:14px; padding:12px 16px; color:var(--text); font-family:inherit; font-size:14px; outline:none; resize:none; max-height:120px; min-height:48px; transition:border-color .2s; line-height:1.5; }
+    .input-bar textarea:focus { border-color:var(--accent); }
+    .input-bar textarea::placeholder { color:var(--muted); }
+    .send-btn { width:48px; height:48px; border-radius:14px; background:linear-gradient(135deg,var(--accent),#9c8fff); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:transform .15s,opacity .15s; }
+    .send-btn:hover  { transform:scale(1.07); }
+    .send-btn:active { transform:scale(.95); }
+    .send-btn:disabled { opacity:.5; cursor:not-allowed; transform:none; }
+    .send-btn svg { width:20px; height:20px; fill:#fff; }
+
+    /* ── INVENTION PAGE ── */
+    #inventionPage { background:var(--bg); min-height:calc(100vh - 77px); }
+
+    /* Maintenance Screen */
+    #maintenanceScreen {
+      flex:1; display:flex; flex-direction:column;
+      align-items:center; justify-content:center;
+      padding:40px 20px; gap:24px; text-align:center;
+    }
+    .gear-wrap { position:relative; width:100px; height:100px; margin-bottom:8px; }
+    .gear {
+      position:absolute; border-radius:50%;
+      border:4px solid var(--accent);
+      display:flex; align-items:center; justify-content:center;
+    }
+    .gear-big {
+      width:80px; height:80px; top:10px; left:10px;
+      animation:spin 4s linear infinite;
+      border-color:var(--accent);
+      border-style:dashed;
+    }
+    .gear-small {
+      width:40px; height:40px; top:0; left:0;
+      animation:spin 2s linear infinite reverse;
+      border-color:var(--accent2);
+      border-style:dashed;
+    }
+    @keyframes spin { to{transform:rotate(360deg)} }
+
+    .float-dots { display:flex; gap:8px; margin-top:4px; }
+    .float-dot {
+      width:8px; height:8px; border-radius:50%;
+      background:var(--accent); opacity:.3;
+      animation:dotPulse 1.4s ease-in-out infinite;
+    }
+    .float-dot:nth-child(2) { animation-delay:.2s; background:var(--accent2); }
+    .float-dot:nth-child(3) { animation-delay:.4s; }
+    @keyframes dotPulse { 0%,80%,100%{opacity:.3;transform:scale(1)} 40%{opacity:1;transform:scale(1.3)} }
+
+    .maintenance-title {
+      font-size:22px; font-weight:700; color:var(--white);
+      background:linear-gradient(135deg,var(--accent),var(--accent2));
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    }
+    .maintenance-sub { font-size:14px; color:var(--muted); line-height:1.7; max-width:320px; }
+
+    .pulse-ring {
+      width:120px; height:120px; border-radius:50%;
+      border:2px solid var(--accent); opacity:.2;
+      position:absolute;
+      animation:ringPulse 2s ease-out infinite;
+    }
+    @keyframes ringPulse { 0%{transform:scale(.8);opacity:.4} 100%{transform:scale(1.6);opacity:0} }
+
+    /* Invention iframe/code view */
+    #inventionView {
+      flex:1; display:none; flex-direction:column;
+    }
+    #inventionFrame {
+      flex:1; border:none; width:100%; min-height:calc(100vh - 77px);
+      background:#fff;
     }
 
-    .panel-title {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      color: var(--muted);
-      margin-bottom: 4px;
-      font-weight: 600;
-    }
+    /* ── TOAST ── */
+    #toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(20px); background:var(--surface2); border:1px solid var(--border); color:var(--text); padding:10px 20px; border-radius:12px; font-size:13px; opacity:0; pointer-events:none; transition:all .3s; z-index:999; }
+    #toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
 
-    .contact-option {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 14px 16px;
-      border-radius: 12px;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      cursor: pointer;
-      text-decoration: none;
-      color: var(--text);
-      transition: all .2s;
-      font-size: 14px;
-      font-weight: 500;
-    }
-    .contact-option:hover {
-      background: var(--border);
-      border-color: var(--accent);
-      transform: translateX(4px);
-    }
-
-    .contact-icon {
-      width: 38px;
-      height: 38px;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      flex-shrink: 0;
-    }
-    .icon-wa  { background: rgba(37,211,102,.15); }
-    .icon-msg { background: rgba(108,99,255,.15); }
-
-    .contact-desc {
-      font-size: 11px;
-      color: var(--muted);
-      margin-top: 2px;
-      font-weight: 400;
-    }
-
-    .divider {
-      height: 1px;
-      background: var(--border);
-      margin: 8px 0;
-    }
-
-    .info-box {
-      padding: 14px 16px;
-      border-radius: 12px;
-      background: rgba(108,99,255,.08);
-      border: 1px solid rgba(108,99,255,.2);
-      font-size: 12px;
-      color: var(--muted);
-      line-height: 1.6;
-    }
-
-    /* ── RIGHT PANEL ── */
-    .right-panel {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      background: var(--bg);
-    }
-
-    /* user name bar */
-    .name-bar {
-      padding: 16px 24px;
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .name-bar input {
-      flex: 1;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 10px 14px;
-      color: var(--text);
-      font-family: inherit;
-      font-size: 14px;
-      outline: none;
-      transition: border-color .2s;
-    }
-    .name-bar input:focus { border-color: var(--accent); }
-    .name-bar input::placeholder { color: var(--muted); }
-
-    .name-label {
-      font-size: 13px;
-      color: var(--muted);
-      white-space: nowrap;
-    }
-
-    /* chat messages */
-    .chat-area {
-      flex: 1;
-      overflow-y: auto;
-      padding: 24px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      scroll-behavior: smooth;
-    }
-
-    .chat-area::-webkit-scrollbar { width: 5px; }
-    .chat-area::-webkit-scrollbar-track { background: transparent; }
-    .chat-area::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
-
-    .msg-row {
-      display: flex;
-      flex-direction: column;
-      max-width: 70%;
-      animation: fadeUp .25s ease;
-    }
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(10px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    .msg-row.sent   { align-self: flex-end; align-items: flex-end; }
-    .msg-row.received { align-self: flex-start; align-items: flex-start; }
-
-    .msg-bubble {
-      padding: 11px 16px;
-      border-radius: 18px;
-      font-size: 14px;
-      line-height: 1.55;
-      word-break: break-word;
-    }
-    .sent .msg-bubble {
-      background: var(--accent);
-      color: #fff;
-      border-bottom-right-radius: 4px;
-    }
-    .received .msg-bubble {
-      background: var(--surface2);
-      color: var(--text);
-      border-bottom-left-radius: 4px;
-      border: 1px solid var(--border);
-    }
-
-    .msg-meta {
-      font-size: 10px;
-      color: var(--muted);
-      margin-top: 4px;
-      padding: 0 4px;
-    }
-
-    .sender-name {
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--accent);
-      margin-bottom: 3px;
-      padding: 0 4px;
-    }
-
-    .empty-state {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      color: var(--muted);
-      gap: 12px;
-      font-size: 14px;
-    }
-    .empty-icon { font-size: 48px; opacity: .4; }
-
-    /* input bar */
-    .input-bar {
-      padding: 16px 20px;
-      background: var(--surface);
-      border-top: 1px solid var(--border);
-      display: flex;
-      align-items: flex-end;
-      gap: 10px;
-    }
-
-    .input-bar textarea {
-      flex: 1;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 12px 16px;
-      color: var(--text);
-      font-family: inherit;
-      font-size: 14px;
-      outline: none;
-      resize: none;
-      max-height: 120px;
-      min-height: 48px;
-      transition: border-color .2s;
-      line-height: 1.5;
-    }
-    .input-bar textarea:focus { border-color: var(--accent); }
-    .input-bar textarea::placeholder { color: var(--muted); }
-
-    .send-btn {
-      width: 48px;
-      height: 48px;
-      border-radius: 14px;
-      background: linear-gradient(135deg, var(--accent), #9c8fff);
-      border: none;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      transition: transform .15s, opacity .15s;
-    }
-    .send-btn:hover { transform: scale(1.07); }
-    .send-btn:active { transform: scale(.95); }
-    .send-btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
-    .send-btn svg { width: 20px; height: 20px; fill: #fff; }
-
-    /* toast */
-    #toast {
-      position: fixed;
-      bottom: 24px;
-      left: 50%;
-      transform: translateX(-50%) translateY(20px);
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 10px 20px;
-      border-radius: 12px;
-      font-size: 13px;
-      opacity: 0;
-      pointer-events: none;
-      transition: all .3s;
-      z-index: 999;
-    }
-    #toast.show {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
-    }
-
-    /* loading dots */
-    .typing {
-      display: flex;
-      gap: 4px;
-      padding: 12px 16px;
-      background: var(--surface2);
-      border-radius: 18px;
-      border-bottom-left-radius: 4px;
-      border: 1px solid var(--border);
-      width: fit-content;
-    }
-    .typing span {
-      width: 7px; height: 7px;
-      background: var(--muted);
-      border-radius: 50%;
-      animation: bounce .8s infinite;
-    }
-    .typing span:nth-child(2) { animation-delay: .15s; }
-    .typing span:nth-child(3) { animation-delay: .3s; }
-    @keyframes bounce {
-      0%,60%,100% { transform: translateY(0); }
-      30% { transform: translateY(-6px); }
-    }
-
-    /* responsive */
-    @media (max-width: 640px) {
-      .left-panel { width: 220px; }
-    }
-    @media (max-width: 480px) {
-      main { flex-direction: column; }
-      .left-panel { width: 100%; border-right: none; border-bottom: 1px solid var(--border); flex-direction: row; flex-wrap: wrap; padding: 14px; }
+    @media(max-width:480px) {
+      main { flex-direction:column; }
+      .left-panel { width:100%; border-right:none; border-bottom:1px solid var(--border); padding:14px; }
     }
   </style>
 </head>
@@ -389,409 +185,471 @@
     <h1>Fahim</h1>
     <div class="status">Online</div>
   </div>
+  <div class="header-spacer"></div>
+
+  <!-- THREE DOT -->
+  <div class="three-dot-wrap">
+    <button class="three-dot-btn" onclick="toggleDotMenu()" title="More options">⋮</button>
+    <div class="dot-menu" id="dotMenu">
+      <div class="dot-menu-item" onclick="showPage('chat')">
+        <span class="mi-icon">💬</span> Message Fahim
+      </div>
+      <div class="dot-menu-item" onclick="showPage('invention')">
+        <span class="mi-icon">🚀</span> New Invention
+      </div>
+    </div>
+  </div>
 </header>
 
-<main>
-
-  <!-- LEFT PANEL -->
-  <aside class="left-panel">
-    <div class="panel-title">যোগাযোগ করুন</div>
-
-    <!-- Original WhatsApp option -->
-    <a class="contact-option" id="waOption" href="#" onclick="openWhatsApp(); return false;">
-      <div class="contact-icon icon-wa">💬</div>
-      <div>
-        <div>WhatsApp</div>
-        <div class="contact-desc">সরাসরি WhatsApp-এ</div>
+<!-- ════════════ PAGE: CHAT ════════════ -->
+<div class="page active" id="chatPage">
+  <main>
+    <aside class="left-panel">
+      <div class="panel-title">যোগাযোগ করুন</div>
+      <a class="contact-option" href="#" onclick="openWhatsApp(); return false;">
+        <div class="contact-icon icon-wa">💬</div>
+        <div><div>WhatsApp</div><div class="contact-desc">সরাসরি WhatsApp-এ</div></div>
+      </a>
+      <div class="divider"></div>
+      <div class="contact-option" onclick="focusChat()">
+        <div class="contact-icon icon-msg">✉️</div>
+        <div><div>সরাসরি মেসেজ</div><div class="contact-desc">এখানেই চ্যাট করুন</div></div>
       </div>
-    </a>
-
-    <div class="divider"></div>
-
-    <!-- New direct message option -->
-    <div class="contact-option" onclick="focusChat()" style="cursor:pointer;">
-      <div class="contact-icon icon-msg">✉️</div>
-      <div>
-        <div>সরাসরি মেসেজ</div>
-        <div class="contact-desc">এখানেই চ্যাট করুন</div>
+      <div id="notifBanner">
+        🔔 Fahim reply দিলে notification পেতে Allow করুন!
+        <button onclick="requestNotifPermission()">🔔 Notification Allow করুন</button>
       </div>
-    </div>
-
-    <div class="info-box">
-      📌 মেসেজ পাঠালে Fahim রিপ্লাই দেবেন এবং আপনি সরাসরি এই পেজেই দেখতে পাবেন দ্রুত রিপ্লাই পেতে সরাসরি whatsapp এ মেসেজ দিন ।
-    </div>
-  </aside>
-
-  <!-- RIGHT PANEL -->
-  <section class="right-panel">
-
-    <!-- Name Bar -->
-    <div class="name-bar">
-      <span class="name-label">আপনার নাম:</span>
-      <input type="text" id="userName" placeholder="নাম লিখুন..." maxlength="50" />
-    </div>
-
-    <!-- Chat Area -->
-    <div class="chat-area" id="chatArea">
-      <div class="empty-state" id="emptyState">
-        <div class="empty-icon">💭</div>
-        <div>এখনো কোনো মেসেজ নেই</div>
-        <div style="font-size:12px">নিচে মেসেজ লিখে পাঠান</div>
+      <div class="info-box">
+        📌 মেসেজ পাঠালে Fahim reply দেবেন। Reply আসলে এখানেই দেখবেন।
       </div>
-    </div>
+    </aside>
 
-    <!-- Input Bar -->
-    <div class="input-bar">
-      <textarea id="userMsg" placeholder="মেসেজ লিখুন..." rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
-      <button class="send-btn" id="sendBtn" onclick="sendMessage()" title="Send">
-        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
-        </svg>
-      </button>
-    </div>
+    <section class="right-panel">
+      <div class="name-bar">
+        <span class="name-label">আপনার নাম:</span>
+        <input type="text" id="userName" placeholder="নাম লিখুন..." maxlength="50" />
+      </div>
+      <div class="chat-area" id="chatArea">
+        <div class="empty-state" id="emptyState">
+          <div class="empty-icon">💭</div>
+          <div>এখনো কোনো মেসেজ নেই</div>
+          <div style="font-size:12px">নিচে মেসেজ লিখে পাঠান</div>
+        </div>
+      </div>
+      <div class="input-bar">
+        <textarea id="userMsg" placeholder="মেসেজ লিখুন... (Enter = পাঠান)" rows="1"
+          onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+        <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+          <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+        </button>
+      </div>
+    </section>
+  </main>
+</div>
 
-  </section>
-</main>
+<!-- ════════════ PAGE: INVENTION ════════════ -->
+<div class="page" id="inventionPage">
+
+  <!-- MAINTENANCE (default) -->
+  <div id="maintenanceScreen">
+    <div class="gear-wrap">
+      <div class="pulse-ring"></div>
+      <div class="gear gear-big">⚙️</div>
+      <div class="gear gear-small" style="font-size:12px">🔧</div>
+    </div>
+    <div class="float-dots">
+      <div class="float-dot"></div>
+      <div class="float-dot"></div>
+      <div class="float-dot"></div>
+    </div>
+    <div class="maintenance-title">New Invention Coming Soon</div>
+    <div class="maintenance-sub">
+      Fahim কিছু একটা তৈরি করছেন। শীঘ্রই এখানে দেখতে পাবেন! 🛠️
+    </div>
+    <div style="font-size:11px; color:var(--muted); margin-top:8px; padding:8px 16px; background:var(--surface); border-radius:8px; border:1px solid var(--border);">
+      🔒 Under Maintenance
+    </div>
+  </div>
+
+  <!-- INVENTION CONTENT (when enabled) -->
+  <div id="inventionView">
+    <iframe id="inventionFrame" sandbox="allow-scripts allow-same-origin allow-forms"></iframe>
+  </div>
+</div>
 
 <div id="toast"></div>
 
-<!-- FIREBASE -->
+<!-- ════════════════════════════════════════
+     FIREBASE + TELEGRAM + PRESENCE
+     ════════════════════════════════════════ -->
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-app.js";
-  import {
-    getFirestore,
-    collection,
-    addDoc,
-    query,
-    orderBy,
-    onSnapshot,
-    serverTimestamp,
-    doc,
-    getDoc
-  } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-firestore.js";
+  import { initializeApp }   from "https://www.gstatic.com/firebasejs/10.12.1/firebase-app.js";
+  import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, doc, onSnapshot as docSnap, setDoc }
+    from "https://www.gstatic.com/firebasejs/10.12.1/firebase-firestore.js";
+  import { getDatabase, ref, onValue, set, onDisconnect }
+    from "https://www.gstatic.com/firebasejs/10.12.1/firebase-database.js";
 
-  // ─── YOUR FIREBASE CONFIG ───
-  const firebaseConfig = {
+  const FB = {
     apiKey: "AIzaSyAfVXqlCXIZE95z2dj0XmNDe5U",
     authDomain: "fahim-s-website.firebaseapp.com",
     projectId: "fahim-s-website",
     storageBucket: "fahim-s-website.appspot.com",
     messagingSenderId: "549002044201",
     appId: "1:549002044201:web:fafcfd8e56067",
-    measurementId: "G-NX6J1ELPVJ"
+    databaseURL: "https://fahim-s-website-default-rtdb.firebaseio.com"
   };
+  const TG_TOKEN   = "8555831529:AAHULBaumaUtvObsrFMo4K97uydFlnBnkiY";
+  const TG_CHAT_ID = "7756832463";
 
-  const app = initializeApp(firebaseConfig);
-  const db  = getFirestore(app);
+  const app  = initializeApp(FB);
+  const db   = getFirestore(app);
+  const rtdb = getDatabase(app);
 
-  // ── Generate or load session ID for this visitor ──
+  /* SESSION */
   let sessionId = localStorage.getItem('fahim_session');
   if (!sessionId) {
-    sessionId = 'user_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7);
+    sessionId = 'user_' + Date.now() + '_' + Math.random().toString(36).slice(2,7);
     localStorage.setItem('fahim_session', sessionId);
   }
+  const saved = localStorage.getItem('fahim_username');
+  if (saved) document.getElementById('userName').value = saved;
 
-  // ── Load saved name ──
-  const savedName = localStorage.getItem('fahim_username');
-  if (savedName) document.getElementById('userName').value = savedName;
+  /* PRESENCE */
+  const presRef  = ref(rtdb, `presence/${sessionId}`);
+  const connRef  = ref(rtdb, '.info/connected');
+  onValue(connRef, snap => {
+    if (snap.val()) { onDisconnect(presRef).remove(); set(presRef, { online:true, at:Date.now() }); }
+  });
+  window.addEventListener('beforeunload', () => set(presRef, null));
 
-  // ── Real-time listener for THIS session's messages ──
-  const msgsRef  = collection(db, 'chats', sessionId, 'messages');
-  const msgsQuery = query(msgsRef, orderBy('timestamp', 'asc'));
+  /* NOTIFICATION */
+  if ('Notification' in window && Notification.permission === 'default')
+    document.getElementById('notifBanner').style.display = 'block';
 
-  let firstLoad = true;
+  window.requestNotifPermission = async () => {
+    const p = await Notification.requestPermission();
+    document.getElementById('notifBanner').style.display = 'none';
+    toast(p==='granted'?'✅ Notification চালু!':'❌ Allow হয়নি');
+  };
+  function browserNotif(title, body) {
+    if (Notification.permission==='granted')
+      new Notification(title,{body,icon:'https://ui-avatars.com/api/?name=F&background=6c63ff&color=fff&size=64'});
+  }
 
-  onSnapshot(msgsQuery, (snapshot) => {
-    const chatArea  = document.getElementById('chatArea');
-    const emptyState = document.getElementById('emptyState');
+  /* TELEGRAM */
+  function sendToTelegram(name, msg) {
+    const text = `🔔 নতুন মেসেজ!\n\n👤 নাম: ${name}\n💬 মেসেজ: ${msg}\n\n🕐 ${new Date().toLocaleTimeString('bn-BD')}`;
+    fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`,{
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({chat_id:TG_CHAT_ID, text})
+    }).catch(e=>console.log('TG:',e));
+  }
 
-    if (snapshot.empty) {
-      emptyState.style.display = 'flex';
-      return;
+  /* INVENTION — listen to Firestore for on/off + code */
+  const inventionDocRef = doc(db, 'settings', 'invention');
+  onSnapshot(inventionDocRef, snap => {
+    if (!snap.exists()) return;
+    const data = snap.data();
+    const isOn = data.enabled === true;
+    const code = data.code || '';
+
+    document.getElementById('maintenanceScreen').style.display = isOn ? 'none' : 'flex';
+    const view = document.getElementById('inventionView');
+    view.style.display = isOn ? 'flex' : 'none';
+
+    if (isOn && code) {
+      const frame = document.getElementById('inventionFrame');
+      frame.srcdoc = code;
     }
-
-    emptyState.style.display = 'none';
-
-    // Remove typing indicator if exists
-    const typingEl = document.getElementById('typingIndicator');
-    if (typingEl) typingEl.remove();
-
-    // Rebuild messages
-    // Only add new messages (avoid full re-render)
-    const rendered = new Set([...chatArea.querySelectorAll('.msg-row')].map(el => el.dataset.id));
-
-    snapshot.docChanges().forEach(change => {
-      if (change.type === 'added') {
-        const data = change.doc.data();
-        const id   = change.doc.id;
-        if (rendered.has(id)) return;
-
-        const isFahim = data.sender === 'fahim';
-        const row = document.createElement('div');
-        row.className = `msg-row ${isFahim ? 'received' : 'sent'}`;
-        row.dataset.id = id;
-
-        if (isFahim) {
-          const nameEl = document.createElement('div');
-          nameEl.className = 'sender-name';
-          nameEl.textContent = 'Fahim';
-          row.appendChild(nameEl);
-        }
-
-        const bubble = document.createElement('div');
-        bubble.className = 'msg-bubble';
-        bubble.textContent = data.text;
-        row.appendChild(bubble);
-
-        const meta = document.createElement('div');
-        meta.className = 'msg-meta';
-        const ts = data.timestamp?.toDate ? data.timestamp.toDate() : new Date();
-        meta.textContent = ts.toLocaleTimeString('bn-BD', { hour: '2-digit', minute: '2-digit' });
-        row.appendChild(meta);
-
-        chatArea.appendChild(row);
-      }
-    });
-
-    // Scroll to bottom
-    chatArea.scrollTop = chatArea.scrollHeight;
-    firstLoad = false;
   });
 
-  // ── Send Message ──
-  window.sendMessage = async function () {
-    const nameInput = document.getElementById('userName');
-    const msgInput  = document.getElementById('userMsg');
-    const sendBtn   = document.getElementById('sendBtn');
+  /* CHAT LISTENER */
+  const msgsQ = query(collection(db,'chats',sessionId,'messages'), orderBy('timestamp','asc'));
+  let firstLoad = true;
 
-    const name = nameInput.value.trim();
-    const text = msgInput.value.trim();
+  onSnapshot(msgsQ, snap => {
+    const chatArea   = document.getElementById('chatArea');
+    const emptyState = document.getElementById('emptyState');
+    if (snap.empty) { emptyState.style.display='flex'; firstLoad=false; return; }
+    emptyState.style.display='none';
 
-    if (!name) { toast('নাম লিখুন আগে!'); nameInput.focus(); return; }
-    if (!text) { toast('মেসেজ লিখুন!'); msgInput.focus(); return; }
+    const rendered = new Set([...chatArea.querySelectorAll('.msg-row')].map(el=>el.dataset.id));
+    snap.docChanges().forEach(change => {
+      if (change.type!=='added') return;
+      const data=change.doc.data(), id=change.doc.id;
+      if (rendered.has(id)) return;
 
-    localStorage.setItem('fahim_username', name);
+      const isFahim = data.sender==='fahim';
+      const row = document.createElement('div');
+      row.className=`msg-row ${isFahim?'received':'sent'}`;
+      row.dataset.id=id;
 
-    sendBtn.disabled = true;
-    msgInput.value   = '';
-    msgInput.style.height = '';
+      if (isFahim) {
+        const n=document.createElement('div'); n.className='sender-name'; n.textContent='Fahim'; row.appendChild(n);
+      }
+      const b=document.createElement('div'); b.className='msg-bubble'; b.textContent=data.text; row.appendChild(b);
+      const m=document.createElement('div'); m.className='msg-meta';
+      const ts=data.timestamp?.toDate?data.timestamp.toDate():new Date();
+      m.textContent=ts.toLocaleTimeString('bn-BD',{hour:'2-digit',minute:'2-digit'});
+      row.appendChild(m);
+      chatArea.appendChild(row);
+      if (!firstLoad && isFahim) browserNotif('📩 Fahim reply করেছেন!', data.text);
+    });
+    chatArea.scrollTop=chatArea.scrollHeight;
+    firstLoad=false;
+  });
 
+  /* SEND */
+  window.sendMessage = async () => {
+    const nameEl=document.getElementById('userName'), msgEl=document.getElementById('userMsg'), btn=document.getElementById('sendBtn');
+    const name=nameEl.value.trim(), text=msgEl.value.trim();
+    if (!name) { toast('⚠️ নাম লিখুন!'); nameEl.focus(); return; }
+    if (!text) { toast('⚠️ মেসেজ লিখুন!'); msgEl.focus(); return; }
+    localStorage.setItem('fahim_username',name);
+    btn.disabled=true; msgEl.value=''; msgEl.style.height='';
+    sendToTelegram(name,text);
     try {
-      // Save to session sub-collection
-      await addDoc(collection(db, 'chats', sessionId, 'messages'), {
-        sender:    'user',
-        senderName: name,
-        text,
-        timestamp: serverTimestamp()
-      });
-
-      // Also save to top-level 'messages' for Fahim's dashboard
-      await addDoc(collection(db, 'messages'), {
-        sessionId,
-        senderName: name,
-        text,
-        timestamp: serverTimestamp(),
-        replied: false
-      });
-
-    } catch (e) {
-      toast('Error: ' + e.message);
-    } finally {
-      sendBtn.disabled = false;
-      msgInput.focus();
-    }
+      await addDoc(collection(db,'chats',sessionId,'messages'),{sender:'user',senderName:name,text,timestamp:serverTimestamp()});
+      await addDoc(collection(db,'messages'),{sessionId,senderName:name,text,timestamp:serverTimestamp(),replied:false});
+    } catch(e){ toast('Error: '+e.message); }
+    finally { btn.disabled=false; msgEl.focus(); }
   };
 
-  // ── WhatsApp fallback ──
-  window.openWhatsApp = function () {
-    const name = document.getElementById('userName').value.trim() || 'একজন ভিজিটর';
-    const msg  = document.getElementById('userMsg').value.trim()  || 'হ্যালো Fahim!';
-    const num  = '8801303359567';
-    window.open(`https://wa.me/${num}?text=Hi Fahim, আমি ${name}.%0A%0AMessage: ${msg}`, '_blank');
+  /* HELPERS */
+  window.openWhatsApp=()=>{
+    const n=document.getElementById('userName').value.trim()||'একজন ভিজিটর';
+    const m=document.getElementById('userMsg').value.trim()||'হ্যালো Fahim!';
+    window.open(`https://wa.me/8801303359567?text=Hi Fahim, আমি ${n}.%0A%0AMessage: ${m}`,'_blank');
+  };
+  window.focusChat  = ()=>document.getElementById('userMsg').focus();
+  window.handleKey  = e=>{ if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();window.sendMessage();} };
+  window.autoResize = el=>{ el.style.height=''; el.style.height=Math.min(el.scrollHeight,120)+'px'; };
+  window.toast = msg=>{
+    const el=document.getElementById('toast'); el.textContent=msg; el.classList.add('show');
+    setTimeout(()=>el.classList.remove('show'),3000);
   };
 
-  window.focusChat = function () {
-    document.getElementById('userMsg').focus();
-  };
-
-  window.handleKey = function (e) {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      window.sendMessage();
-    }
-  };
-
-  window.autoResize = function (el) {
-    el.style.height = '';
-    el.style.height = Math.min(el.scrollHeight, 120) + 'px';
-  };
-
-  window.toast = function (msg) {
-    const el = document.getElementById('toast');
-    el.textContent = msg;
-    el.classList.add('show');
-    setTimeout(() => el.classList.remove('show'), 3000);
+  /* PAGE SWITCH */
+  window.showPage = (page) => {
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    document.getElementById(page==='invention'?'inventionPage':'chatPage').classList.add('active');
+    closeDotMenu();
   };
 </script>
 
-<!-- ══════════════════════════════════════════════
-     FAHIM'S ADMIN PANEL  (লুকানো — শুধু Fahim দেখবেন)
-     URL-এ ?admin=fahim123 যোগ করলে খুলবে
-     ══════════════════════════════════════════════ -->
-<script type="module">
-  if (new URLSearchParams(location.search).get('admin') === 'fahim123') {
-    // Import firebase again (module scope)
-    import("https://www.gstatic.com/firebasejs/10.12.1/firebase-app.js").then(({ initializeApp }) => {
-      import("https://www.gstatic.com/firebasejs/10.12.1/firebase-firestore.js").then(({
-        getFirestore, collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, where, getDocs
-      }) => {
-        const firebaseConfig = {
-          apiKey: "AIzaSyAfVXqlCXIZE95z2dj0XmNDe5U",
-          authDomain: "fahim-s-website.firebaseapp.com",
-          projectId: "fahim-s-website",
-          storageBucket: "fahim-s-website.appspot.com",
-          messagingSenderId: "549002044201",
-          appId: "1:549002044201:web:fafcfd8e56067"
-        };
+<!-- THREE DOT MENU TOGGLE -->
+<script>
+  function toggleDotMenu() {
+    document.getElementById('dotMenu').classList.toggle('open');
+  }
+  function closeDotMenu() {
+    document.getElementById('dotMenu').classList.remove('open');
+  }
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.three-dot-wrap')) closeDotMenu();
+  });
+</script>
 
-        const app2 = initializeApp(firebaseConfig, 'admin');
-        const db2  = getFirestore(app2);
+<!-- ══════════════════════════════════
+     ADMIN PANEL  ?admin=fahim123
+     ══════════════════════════════════ -->
+<script>
+if (new URLSearchParams(location.search).get('admin') === 'fahim123') {
 
-        // Build admin UI
-        const panel = document.createElement('div');
-        panel.innerHTML = `
-          <style>
-            #adminPanel {
-              position: fixed; top: 0; right: 0; width: 380px; height: 100vh;
-              background: #12121a; border-left: 2px solid #6c63ff;
-              z-index: 9999; display: flex; flex-direction: column;
-              font-family: 'Poppins', sans-serif; font-size: 13px; color: #e8e8f0;
-            }
-            #adminHeader {
-              padding: 14px 16px; background: #1a1a24; border-bottom: 1px solid #2e2e40;
-              font-weight: 600; font-size: 14px; display: flex; justify-content: space-between;
-            }
-            #adminBadge { background: #6c63ff; color:#fff; padding: 2px 10px; border-radius: 20px; font-size:11px; }
-            #sessionList { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 8px; }
-            .session-card {
-              background: #1a1a24; border: 1px solid #2e2e40; border-radius: 10px;
-              padding: 12px; cursor: pointer; transition: border-color .2s;
-            }
-            .session-card:hover, .session-card.active { border-color: #6c63ff; }
-            .session-card .sc-name { font-weight: 600; color: #fff; }
-            .session-card .sc-preview { color: #7a7a99; font-size: 11px; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-            #replyPanel {
-              border-top: 2px solid #6c63ff; background: #1a1a24;
-              display: none; flex-direction: column; max-height: 55vh;
-            }
-            #replyHeader { padding: 10px 14px; font-size: 12px; color: #7a7a99; border-bottom: 1px solid #2e2e40; }
-            #adminChat { flex:1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 8px; }
-            .am { background: #2e2e40; border-radius: 12px; padding: 8px 12px; font-size: 13px; }
-            .am.fahim { background: #6c63ff; color: #fff; align-self: flex-end; }
-            .am-meta { font-size: 10px; color: #7a7a99; margin-top: 3px; }
-            #replyRow { display: flex; gap: 8px; padding: 10px; }
-            #adminInput {
-              flex:1; background: #22222f; border: 1px solid #2e2e40; border-radius: 10px;
-              padding: 9px 12px; color: #e8e8f0; font-family: inherit; font-size: 13px; outline: none; resize: none;
-            }
-            #adminInput:focus { border-color: #6c63ff; }
-            #replyBtn {
-              background: #6c63ff; border: none; color: #fff; border-radius: 10px;
-              padding: 0 16px; cursor: pointer; font-size: 13px; font-weight: 600;
-            }
-          </style>
-          <div id="adminPanel">
-            <div id="adminHeader">
-              <span>🔐 Admin Panel</span>
-              <span id="adminBadge">Fahim Only</span>
-            </div>
-            <div id="sessionList"><div style="color:#7a7a99;padding:16px">লোড হচ্ছে...</div></div>
-            <div id="replyPanel">
-              <div id="replyHeader">সিলেক্ট করা কথোপকথন</div>
-              <div id="adminChat"></div>
-              <div id="replyRow">
-                <textarea id="adminInput" rows="2" placeholder="Reply লিখুন... (Enter = send)"></textarea>
-                <button id="replyBtn" onclick="adminReply()">পাঠান</button>
-              </div>
-            </div>
+  const style = document.createElement('style');
+  style.textContent = `
+    #adminPanel { position:fixed;top:0;right:0;width:390px;height:100vh;background:#12121a;border-left:2px solid #6c63ff;z-index:9999;display:flex;flex-direction:column;font-family:'Poppins',sans-serif;font-size:13px;color:#e8e8f0;box-shadow:-8px 0 32px rgba(0,0,0,.6); }
+    #aHead { padding:14px 16px;background:#1a1a24;border-bottom:1px solid #2e2e40;display:flex;flex-direction:column;gap:10px; }
+    .aHead-row { display:flex;justify-content:space-between;align-items:center; }
+    #aBadge { background:#6c63ff;color:#fff;padding:2px 10px;border-radius:20px;font-size:11px; }
+    #onlineBox { display:flex;align-items:center;gap:12px;background:#0f0f13;border:1px solid #2e2e40;border-radius:10px;padding:10px 14px; }
+    .odot { width:10px;height:10px;border-radius:50%;background:#4ade80;box-shadow:0 0 0 3px rgba(74,222,128,.2);animation:op 2s infinite;flex-shrink:0; }
+    @keyframes op{0%,100%{box-shadow:0 0 0 3px rgba(74,222,128,.2)}50%{box-shadow:0 0 0 7px rgba(74,222,128,.08)}}
+    #onlineCount { font-size:26px;font-weight:700;color:#4ade80;line-height:1; }
+    .olabel { font-size:10px;color:#7a7a99;margin-top:1px; }
+    .osub { font-size:11px;color:#7a7a99; }
+
+    /* INVENTION CONTROL */
+    #inventionControl { padding:12px 14px;background:#0f0f13;border-bottom:1px solid #2e2e40; }
+    .inv-title { font-size:11px;text-transform:uppercase;letter-spacing:1.2px;color:#7a7a99;font-weight:600;margin-bottom:10px; }
+    .toggle-row { display:flex;align-items:center;justify-content:space-between;margin-bottom:10px; }
+    .toggle-label { font-size:13px;color:#e8e8f0; }
+    .toggle-switch { position:relative;width:46px;height:26px; }
+    .toggle-switch input { opacity:0;width:0;height:0; }
+    .toggle-slider { position:absolute;inset:0;background:#2e2e40;border-radius:26px;cursor:pointer;transition:.3s; }
+    .toggle-slider::before { content:'';position:absolute;width:20px;height:20px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.3s; }
+    .toggle-switch input:checked + .toggle-slider { background:#6c63ff; }
+    .toggle-switch input:checked + .toggle-slider::before { transform:translateX(20px); }
+    #codeInput { width:100%;height:120px;background:#22222f;border:1px solid #2e2e40;border-radius:10px;padding:10px;color:#e8e8f0;font-family:monospace;font-size:12px;outline:none;resize:vertical; }
+    #codeInput:focus { border-color:#6c63ff; }
+    #saveInvBtn { margin-top:8px;width:100%;background:linear-gradient(135deg,#6c63ff,#9c8fff);border:none;color:#fff;border-radius:10px;padding:9px;cursor:pointer;font-size:13px;font-weight:600;font-family:inherit; }
+    #saveInvBtn:hover { opacity:.9; }
+
+    #aList { flex:1;overflow-y:auto;padding:10px;display:flex;flex-direction:column;gap:7px; }
+    .sec-title { font-size:10px;text-transform:uppercase;letter-spacing:1.2px;color:#7a7a99;padding:4px 4px 6px;font-weight:600; }
+    .sc { background:#1a1a24;border:1px solid #2e2e40;border-radius:10px;padding:11px 13px;cursor:pointer;transition:border-color .2s; }
+    .sc:hover,.sc.active{border-color:#6c63ff;}
+    .sc-name{font-weight:600;color:#fff;font-size:13px;}
+    .sc-prev{color:#7a7a99;font-size:11px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    #aReply{border-top:2px solid #6c63ff;background:#1a1a24;display:none;flex-direction:column;max-height:40vh;}
+    #aRHead{padding:9px 13px;font-size:12px;color:#7a7a99;border-bottom:1px solid #2e2e40;}
+    #aChat{flex:1;overflow-y:auto;padding:10px;display:flex;flex-direction:column;gap:7px;}
+    .am{background:#2e2e40;border-radius:11px;padding:8px 12px;font-size:13px;line-height:1.4;}
+    .am.f{background:#6c63ff;color:#fff;align-self:flex-end;}
+    .am-m{font-size:10px;color:#7a7a99;margin-top:3px;}
+    .am.f .am-m{color:rgba(255,255,255,.55);}
+    #aRow{display:flex;gap:8px;padding:10px;}
+    #aInp{flex:1;background:#22222f;border:1px solid #2e2e40;border-radius:10px;padding:9px 12px;color:#e8e8f0;font-family:inherit;font-size:13px;outline:none;resize:none;}
+    #aInp:focus{border-color:#6c63ff;}
+    #aBtn{background:#6c63ff;border:none;color:#fff;border-radius:10px;padding:0 16px;cursor:pointer;font-size:13px;font-weight:600;}
+    .no-msg{color:#7a7a99;padding:14px;font-size:12px;}
+  `;
+  document.head.appendChild(style);
+
+  document.body.insertAdjacentHTML('beforeend', `
+    <div id="adminPanel">
+      <div id="aHead">
+        <div class="aHead-row">
+          <span style="font-weight:600;font-size:14px">🔐 Admin Panel</span>
+          <span id="aBadge">Fahim Only</span>
+        </div>
+        <div id="onlineBox">
+          <div class="odot"></div>
+          <div>
+            <div id="onlineCount">০</div>
+            <div class="olabel">জন এখন Online</div>
           </div>
-        `;
-        document.body.appendChild(panel);
+          <div class="osub">Realtime count</div>
+        </div>
+      </div>
 
-        let currentSession = null;
-        let unsubChat = null;
+      <!-- INVENTION CONTROL -->
+      <div id="inventionControl">
+        <div class="inv-title">🚀 New Invention Control</div>
+        <div class="toggle-row">
+          <span class="toggle-label">Invention চালু করো</span>
+          <label class="toggle-switch">
+            <input type="checkbox" id="invToggle" onchange="saveInvention()">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <textarea id="codeInput" placeholder="এখানে HTML/CSS/JS code paste করো...&#10;&#10;যখন toggle ON করবে তখন সবাই দেখতে পাবে।"></textarea>
+        <button id="saveInvBtn" onclick="saveInvention()">💾 Save & Apply</button>
+      </div>
 
-        // Load all sessions (from top-level messages, grouped by sessionId)
-        const sessions = {};
-        const allMsgsQ = query(collection(db2, 'messages'), orderBy('timestamp', 'desc'));
-        onSnapshot(allMsgsQ, (snap) => {
-          snap.docs.forEach(d => {
-            const data = d.data();
-            if (!sessions[data.sessionId]) {
-              sessions[data.sessionId] = { name: data.senderName, last: data.text, id: data.sessionId };
-            }
-          });
+      <div id="aList">
+        <div class="sec-title">মেসেজ করেছেন</div>
+        <div class="no-msg">লোড হচ্ছে...</div>
+      </div>
+      <div id="aReply">
+        <div id="aRHead">কথোপকথন</div>
+        <div id="aChat"></div>
+        <div id="aRow">
+          <textarea id="aInp" rows="2" placeholder="Reply লিখুন..."></textarea>
+          <button id="aBtn" onclick="adminSend()">পাঠান</button>
+        </div>
+      </div>
+    </div>
+  `);
 
-          const list = document.getElementById('sessionList');
-          list.innerHTML = '';
-          if (!Object.keys(sessions).length) {
-            list.innerHTML = '<div style="color:#7a7a99;padding:16px">এখনো কোনো মেসেজ নেই</div>';
-            return;
-          }
-          Object.values(sessions).forEach(s => {
-            const card = document.createElement('div');
-            card.className = 'session-card' + (s.id === currentSession ? ' active' : '');
-            card.innerHTML = `<div class="sc-name">${s.name}</div><div class="sc-preview">${s.last}</div>`;
-            card.onclick = () => openSession(s.id, s.name);
-            list.appendChild(card);
-          });
-        });
+  Promise.all([
+    import("https://www.gstatic.com/firebasejs/10.12.1/firebase-app.js"),
+    import("https://www.gstatic.com/firebasejs/10.12.1/firebase-firestore.js"),
+    import("https://www.gstatic.com/firebasejs/10.12.1/firebase-database.js")
+  ]).then(([{initializeApp},{getFirestore,collection,query,orderBy,onSnapshot,addDoc,serverTimestamp,doc,setDoc},{ getDatabase,ref,onValue}])=>{
 
-        function openSession(sid, name) {
-          currentSession = sid;
-          document.getElementById('replyPanel').style.display = 'flex';
-          document.getElementById('replyPanel').style.flexDirection = 'column';
-          document.getElementById('replyHeader').textContent = `💬 ${name}`;
+    const app2 = initializeApp({
+      apiKey:"AIzaSyAfVXqlCXIZE95z2dj0XmNDe5U",
+      authDomain:"fahim-s-website.firebaseapp.com",
+      projectId:"fahim-s-website",
+      storageBucket:"fahim-s-website.appspot.com",
+      messagingSenderId:"549002044201",
+      appId:"1:549002044201:web:fafcfd8e56067",
+      databaseURL:"https://fahim-s-website-default-rtdb.firebaseio.com"
+    },'admin2');
+    const db2=getFirestore(app2), rtdb2=getDatabase(app2);
 
-          if (unsubChat) unsubChat();
+    /* Online count */
+    const bn=['০','১','২','৩','৪','৫','৬','৭','৮','৯'];
+    onValue(ref(rtdb2,'presence'),snap=>{
+      const c=snap.exists()?Object.keys(snap.val()).length:0;
+      document.getElementById('onlineCount').textContent=String(c).split('').map(d=>bn[+d]??d).join('');
+    });
 
-          const chatQ = query(collection(db2, 'chats', sid, 'messages'), orderBy('timestamp', 'asc'));
-          unsubChat = onSnapshot(chatQ, (snap) => {
-            const ac = document.getElementById('adminChat');
-            ac.innerHTML = '';
-            snap.docs.forEach(d => {
-              const data = d.data();
-              const div = document.createElement('div');
-              div.className = 'am' + (data.sender === 'fahim' ? ' fahim' : '');
-              div.textContent = data.text;
-              const ts = data.timestamp?.toDate ? data.timestamp.toDate() : new Date();
-              div.innerHTML += `<div class="am-meta">${data.sender === 'fahim' ? 'আপনি' : data.senderName} · ${ts.toLocaleTimeString('bn-BD', {hour:'2-digit',minute:'2-digit'})}</div>`;
-              ac.appendChild(div);
-            });
-            ac.scrollTop = ac.scrollHeight;
-          });
-        }
+    /* Load current invention settings */
+    onSnapshot(doc(db2,'settings','invention'),snap=>{
+      if (!snap.exists()) return;
+      const d=snap.data();
+      document.getElementById('invToggle').checked = d.enabled===true;
+      document.getElementById('codeInput').value   = d.code||'';
+    });
 
-        window.adminReply = async function () {
-          if (!currentSession) return;
-          const inp = document.getElementById('adminInput');
-          const text = inp.value.trim();
-          if (!text) return;
-          inp.value = '';
-          await addDoc(collection(db2, 'chats', currentSession, 'messages'), {
-            sender: 'fahim',
-            senderName: 'Fahim',
-            text,
-            timestamp: serverTimestamp()
-          });
-        };
+    /* Save invention */
+    window.saveInvention = async ()=>{
+      const enabled = document.getElementById('invToggle').checked;
+      const code    = document.getElementById('codeInput').value;
+      try {
+        await setDoc(doc(db2,'settings','invention'),{ enabled, code, updatedAt:serverTimestamp() });
+        toast('✅ Invention '+(enabled?'চালু':'বন্ধ')+' হয়েছে!');
+      } catch(e){ toast('Error: '+e.message); }
+    };
 
-        document.getElementById('adminInput').addEventListener('keydown', e => {
-          if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); window.adminReply(); }
-        });
+    /* Sessions */
+    let currentSid=null, unsubChat=null;
+    const sessions={};
+
+    onSnapshot(query(collection(db2,'messages'),orderBy('timestamp','desc')),snap=>{
+      snap.docs.forEach(d=>{
+        const data=d.data();
+        if (!sessions[data.sessionId]) sessions[data.sessionId]={name:data.senderName,last:data.text,id:data.sessionId};
+        else sessions[data.sessionId].last=data.text;
+      });
+      const list=document.getElementById('aList');
+      list.innerHTML='<div class="sec-title">মেসেজ করেছেন</div>';
+      const vals=Object.values(sessions);
+      if (!vals.length){list.innerHTML+='<div class="no-msg">এখনো কোনো মেসেজ নেই</div>';return;}
+      vals.forEach(s=>{
+        const card=document.createElement('div');
+        card.className='sc'+(s.id===currentSid?' active':'');
+        card.innerHTML=`<div class="sc-name">${s.name}</div><div class="sc-prev">${s.last}</div>`;
+        card.onclick=()=>openSess(s.id,s.name);
+        list.appendChild(card);
       });
     });
-  }
+
+    function openSess(sid,name){
+      currentSid=sid;
+      const rp=document.getElementById('aReply');
+      rp.style.display='flex'; rp.style.flexDirection='column';
+      document.getElementById('aRHead').textContent='💬 '+name;
+      document.querySelectorAll('.sc').forEach(el=>el.classList.remove('active'));
+      if (unsubChat) unsubChat();
+      unsubChat=onSnapshot(query(collection(db2,'chats',sid,'messages'),orderBy('timestamp','asc')),snap=>{
+        const ac=document.getElementById('aChat'); ac.innerHTML='';
+        snap.docs.forEach(d=>{
+          const data=d.data();
+          const div=document.createElement('div');
+          div.className='am'+(data.sender==='fahim'?' f':'');
+          div.textContent=data.text;
+          const ts=data.timestamp?.toDate?data.timestamp.toDate():new Date();
+          const meta=document.createElement('div'); meta.className='am-m';
+          meta.textContent=(data.sender==='fahim'?'আপনি':data.senderName)+' · '+ts.toLocaleTimeString('bn-BD',{hour:'2-digit',minute:'2-digit'});
+          div.appendChild(meta); ac.appendChild(div);
+        });
+        ac.scrollTop=ac.scrollHeight;
+      });
+      document.getElementById('aInp').focus();
+    }
+
+    window.adminSend=async()=>{
+      if (!currentSid) return;
+      const inp=document.getElementById('aInp'), text=inp.value.trim();
+      if (!text) return; inp.value='';
+      await addDoc(collection(db2,'chats',currentSid,'messages'),{sender:'fahim',senderName:'Fahim',text,timestamp:serverTimestamp()});
+    };
+    document.getElementById('aInp').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();window.adminSend();}});
+  });
+}
 </script>
 
 </body>
